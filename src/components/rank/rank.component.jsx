@@ -2,7 +2,7 @@ import './rank.styles.css';
 
 const Rank = () => {
     return (
-        <div>
+        <div className='rank-container'>
             <div className="rank-text">
                 {'Daniel, your current rank is ...'}
             </div>

@@ -22,7 +22,8 @@ class App extends Component {
     super()
     this.state = {
       input: '',
-      imageUrl: ''
+      imageUrl: '',
+      box: {}
     }
   }
 
@@ -58,6 +59,25 @@ class App extends Component {
     return requestOptions;
   }
 
+  calculateFaceLocation = (data) => {
+    const faceLocation = data.outputs[0].data.regions[0].region_info.bounding_box;
+    console.log("calculate face location", faceLocation);
+    const faceImage = document.getElementById("inputimage");
+    const width = Number(faceImage.width);
+    const height = Number(faceImage.height);
+    console.log(width, height)
+
+    const faceBox = {
+      leftCol: faceLocation.left_col * width,
+      topRow: faceLocation.top_row * height,
+      rightCol: width - (faceLocation.right_col * width),
+      bottomRow: height - (faceLocation.bottom_row * height)
+    }
+
+    this.setState(() => { return { box: faceBox } })
+
+  }
+
   onInputChange = (event) => {
     console.log(event.target.value);
     this.setState(() => { return { input: event.target.value } })
@@ -69,18 +89,19 @@ class App extends Component {
     console.log("clik submit");
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", this.returnClarifaiRequestOptions(this.state.input))
       .then(response => response.json())
-      .then(result => console.log(result.outputs[0].data.regions[0].region_info.bounding_box))
+      .then(result => this.calculateFaceLocation(result))
       .catch(error => console.log('error', error));
   }
 
   render() {
+    console.log("from render", this.state.box);
     return (
       <div className="App">
         <Navigation />
         <Logo />
         <Rank />
         <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-        <FaceRecognition imageURL={this.state.imageUrl} />
+        <FaceRecognition imageURL={this.state.imageUrl} faceBox={this.state.box} />
         <ParticlesBg color="#F9F9E0" num={200} type="cobweb" bg={true} />
       </div>
     );

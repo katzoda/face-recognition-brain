@@ -5,7 +5,8 @@
 
 .image-link-form-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(900px, 1fr));
+    /* grid-template-columns: repeat(auto-fill, minmax(800px, 1fr)); */
+    grid-template-columns: 100%;
     justify-items: center;
     font-size: 30px;
 }
