@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import Navigation from './components/navigation/navigation.component';
-import Logo from './components/logo/logo.component';
-import ImageLinkForm from './components/imageLinkForm/imageLinkForm.component';
-import Rank from './components/rank/rank.component';
-import FaceRecognition from './components/faceRecognition/faceRecognition.component';
+import Home from './components/home/home.component';
+import SignIn from './components/sign-in/sign-in.component';
+import Register from './register/register.component';
 import ParticlesBg from 'particles-bg';
 import './App.css';
 
@@ -23,7 +22,8 @@ class App extends Component {
     this.state = {
       input: '',
       imageUrl: '',
-      box: {}
+      box: {},
+      route: 'signin'
     }
   }
 
@@ -93,19 +93,43 @@ class App extends Component {
       .catch(error => console.log('error', error));
   }
 
+  onRouteChange = (route) => {
+    this.setState(() => { return { route: route } })
+  }
+
+
   render() {
-    console.log("from render", this.state.box);
-    return (
-      <div className="App">
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-        <FaceRecognition imageURL={this.state.imageUrl} faceBox={this.state.box} />
-        <ParticlesBg color="#F9F9E0" num={200} type="cobweb" bg={true} />
-      </div>
-    );
+
+    if (this.state.route === 'home') {
+      return (
+        <div className="App">
+          <Navigation onRouteChange={this.onRouteChange} />
+          <Home onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} imageURL={this.state.imageUrl} faceBox={this.state.box} />
+          <ParticlesBg color="#F9F9E0" num={200} type="cobweb" bg={true} />
+        </div>
+      );
+    }
+    else {
+      if (this.state.route === 'signin') {
+        return (
+          <div className='App'>
+            {/* <Navigation onRouteChange={this.onRouteChange} /> */}
+            <SignIn onRouteChange={this.onRouteChange} />
+            <ParticlesBg color="#F9F9E0" num={200} type="cobweb" bg={true} />
+          </div>
+        );
+      }
+      else {
+        return (
+          <div className='App'>
+            {/* <Navigation onRouteChange={this.onRouteChange} /> */}
+            <Register onRouteChange={this.onRouteChange} />
+            <ParticlesBg color="#F9F9E0" num={200} type="cobweb" bg={true} />
+          </div>
+        );
+      }
+
+    }
   }
 }
-
 export default App;
